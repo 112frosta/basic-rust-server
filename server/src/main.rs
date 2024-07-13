@@ -1,12 +1,21 @@
 #[macro_use]
 extern crate rocket;
 
-#[get("/<name>/<age>")]
-fn hello(name: &str, age: u8) -> String {
-    format!("Hello, {} year old named {}!", age, name)
+fn fibonacci(n: u32) -> u32 {
+    match n {
+        0 => 0,
+        1 => 1,
+        _ => fibonacci(n - 1) + fibonacci(n - 2),
+    }
+}
+
+#[get("/expensiveCalc")]
+fn expensive_calc() -> String {
+    let result = fibonacci(40);
+    format!("Fibonacci(40) = {}", result)
 }
 
 #[launch]
 fn rocket() -> _ {
-    rocket::build().mount("/hello", routes![hello])
+    rocket::build().mount("/", routes![expensive_calc])
 }
